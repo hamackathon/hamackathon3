@@ -1,5 +1,13 @@
 <h2>安否情報登録</h2>
 
+<div data-role="fielderror">
+	<% if !@person.error_messages.empty? %>
+		<% @person.error_messages.each{|message| %>
+			<ul><font color="#ff0000"><%= message %></font></ul>
+		<% } %>
+	<% end %>
+</div><br>
+
 <form action='/registered' method='post'>
 <div data-role="fieldcontain">
     <label for="name">名前:</label>

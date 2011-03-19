@@ -17,6 +17,7 @@ end
 
 get '/register' do
 	@person = Person.new({})
+  @person.error_messages = [""]
 	erb :register
 end
 
