@@ -10,6 +10,10 @@ class PersonTest < Test::Unit::TestCase
     'gender' => Person::MALE
   }
   
+  def setup
+    Person.rm_repo
+  end
+  
   def test_initialize
     person = Person.new(TARO)
     assert_not_nil(person)
@@ -29,6 +33,22 @@ class PersonTest < Test::Unit::TestCase
   
   def test_data_dir
     assert_not_nil(Person.data_dir)
+  end
+  
+  def test_init_repo
+    git_dir = File.join(Person.data_dir, '.git')
+    assert !File.exist?(git_dir)
+    Person.init_repo
+    assert File.exist?(git_dir)
+    FileUtils.rmtree(git_dir)
+  end
+  
+  def test_rm_repo
+    git_dir = File.join(Person.data_dir, '.git')
+    Person.init_repo
+    assert File.exist?(git_dir)
+    Person.rm_repo
+    assert !File.exist?(git_dir)
   end
   
   def test_to_yaml
@@ -75,5 +95,66 @@ class PersonTest < Test::Unit::TestCase
     taro = Person.new
     assert !taro.save()
     assert_not_nil(taro.error_messages)
+  end
+  
+  def test_add_to_repo
+    Person.init_repo
+    taro = Person.new(TARO)
+    taro.save()
+    taro.add_to_repo
+  end
+  
+  def test_commit
+    Person.init_repo
+    taro = Person.new(TARO)
+    taro.save()
+    taro.add_to_repo
+    commit = taro.commit("Test commit")
+    assert_not_nil(commit)
+  end
+  
+  def test_rm_from_repo
+    Person.init_repo
+    taro = Person.new(TARO)
+    taro.save()
+    taro.add_to_repo
+    taro.commit("Test commit")
+    taro.rm_from_repo
+    commit = taro.commit("Remove commited file")
+    assert_not_nil(commit)
+  end
+  
+  def test_save_and_commit
+    Person.init_repo
+    taro = Person.new(TARO)
+    commit = taro.save_and_commit("Test save and commit")
+    assert_not_nil(commit)
+  end
+  
+  def test_rm_and_commit
+    Person.init_repo
+    taro = Person.new(TARO)
+    taro.save_and_commit("Test save and commit")
+    commit = taro.rm_and_commit("Remove commited file")
+    assert_not_nil(commit)
+  end
+  
+  def test_find_by_keyword
+    Person.init_repo
+    taro = Person.new(TARO)
+    taro.save_and_commit("Add Taro san.")
+    hanako = Person.new(TARO.merge({ 'name' => '鈴木花子' }))
+    hanako.save_and_commit("Add Hanako san.")
+    
+    results = Person.find_by_keyword("東京都")
+    assert_equal(2, results.size)
+    
+    results = Person.find_by_keyword("太郎")
+    assert_equal(1, results.size)
+    assert_equal("山田太郎", results.first.name)
+    
+    results = Person.find_by_keyword("鈴木")
+    assert_equal(1, results.size)
+    assert_equal("鈴木花子", results.first.name)
   end
 end
