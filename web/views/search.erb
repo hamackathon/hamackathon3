@@ -1,4 +1,8 @@
-<p>検索したい人の名前は？</p>
-	<form action='/search' method='post'>
-	<input type='text' name='name'><input type='submit' value='検索'>
+<p>検索したい人の情報を入力してください</p>
+<form action='/searched' method='post'>
+<div data-role="fieldcontain">
+    <label for="tel">キーワード:</label>
+    <input type="text" name="keyword" id="keyword" value=""  />
+</div>	
+<input type='submit' value='検索'>
  </form>

@@ -25,7 +25,7 @@ post '/registered' do
 	input = params
     input["gender"] = (params[:gender] == "male") ? "男性" : "女性" if !(params[:gender] == nil || params[:gender].empty?)
     @person = Person.new(input)
-    if @person.save()
+    if @person.save_and_commit()
         erb :registered
     else
         erb :register
@@ -37,5 +37,6 @@ get '/search' do
 end
 
 post '/searched' do
+	@persons = Person.find_by_keyword(params[:keyword])
 	erb :searched
 end
