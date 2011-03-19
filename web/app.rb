@@ -16,12 +16,15 @@ get '/' do
 end
 
 get '/register' do
+	p "new"
 	@person = Person.new({})
 	erb :register
 end
 
 post '/registered' do
-    @person = Person.new(params)
+	input = params
+    input["gender"] = (params[:gender] == "male") ? "男性" : "女性" if !(params[:gender] == nil || params[:gender].empty?)
+    @person = Person.new(input)
     if @person.save()
         erb :registered
     else
