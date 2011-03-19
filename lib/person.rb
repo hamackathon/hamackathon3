@@ -108,6 +108,7 @@ class Person
   def save_and_commit(message=nil)
     unless self.save
       return nil
+    end
     self.add_to_repo
     self.commit(message)
   end
