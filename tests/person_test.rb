@@ -1,6 +1,5 @@
 # conding: utf-8
 require File.expand_path('test_helper', File.dirname(__FILE__))
-require 'person'
 
 class PersonTest < Test::Unit::TestCase
   TARO = {
@@ -10,10 +9,6 @@ class PersonTest < Test::Unit::TestCase
     'birthday' => "1970-01-01",
     'gender' => Person::MALE
   }
-  
-  def setup
-    Person.data_dir = File.join(File.dirname(__FILE__), 'out')
-  end
   
   def test_initialize
     person = Person.new(TARO)
@@ -76,8 +71,9 @@ class PersonTest < Test::Unit::TestCase
     assert !File.exist?(taro.fullpath)
   end
   
-  def save_with_commit
-    taro = Person.new(TARO)
-    
+  def test_save_with_validation
+    taro = Person.new
+    assert !taro.save()
+    assert_not_nil(taro.error_messages)
   end
 end

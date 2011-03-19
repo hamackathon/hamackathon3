@@ -9,7 +9,7 @@ class Person
   MALE = "m"
   FEMALE = "f"
   
-  attr_accessor :name, :address, :tel, :birthday, :gender, :logs
+  attr_accessor :name, :address, :tel, :birthday, :gender, :logs, :error_messages
   
   def initialize(params={})
     self.name = params['name']
@@ -51,6 +51,11 @@ class Person
   end
   
   def save()
+    unless self.name && self.name.strip != ''
+      self.error_messages = ["Name is required."]
+      return false
+    end
+    
     dir = File.expand_path('..', self.fullpath)
     FileUtils.mkdir_p(dir)
     File.open(self.fullpath, 'w') do |f|
