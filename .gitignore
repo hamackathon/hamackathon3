@@ -1,2 +1,6 @@
-.DS_store
+.DS_Store
+.project
+.settings
+*.tmp*
 tests/out/*
+data/*
