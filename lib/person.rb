@@ -1,4 +1,5 @@
 # conding: utf-8
+require 'rubygems'
 require 'yaml'
 require 'erb'
 require 'digest/md5'
@@ -22,7 +23,7 @@ class Person
     params = YAML.load(File.read(file_path))
     Person.new(params)
   end
-  
+    
   def self.data_dir=(path)
     @@data_dir = path
   end
@@ -30,7 +31,7 @@ class Person
   def self.data_dir
     @@data_dir
   end
-  
+    
   def to_yaml
     person = self
     erb = ERB.new(TEMPLATE)
@@ -42,20 +43,25 @@ class Person
   end
   
   def path
-    @path ||= File.join(Person.data_dir, self.id[0, 2], self.id[2, 2], "#{self.id}.yaml")
+    [self.id[0, 2], self.id[2, 2], "#{self.id}.yaml"].join(File::SEPARATOR)
+  end
+  
+  def fullpath
+    @fullpath ||= File.join(Person.data_dir, self.path)
   end
   
   def save()
-    dir = File.expand_path('..', self.path)
+    dir = File.expand_path('..', self.fullpath)
     FileUtils.mkdir_p(dir)
-    File.open(self.path, 'w') do |f|
+    File.open(self.fullpath, 'w') do |f|
       f.puts self.to_yaml
     end
+    
     return true
   end
   
   def delete()
-    File.delete(self.path)
+    File.delete(self.fullpath)
   end
   
   TEMPLATE =<<EOS

@@ -52,22 +52,32 @@ class PersonTest < Test::Unit::TestCase
   
   def test_path
     taro = Person.new(TARO)
-    assert_not_nil(taro.path)
+    assert_equal("#{taro.id[0, 2]}/#{taro.id[2, 2]}/#{taro.id}.yaml", taro.path)
+  end
+  
+  def test_fullpath
+    taro = Person.new(TARO)
+    assert_equal(File.join(Person.data_dir, taro.path), taro.fullpath)
   end
   
   def test_save
     taro = Person.new(TARO)
-    assert !File.exist?(taro.path)
+    assert !File.exist?(taro.fullpath)
     assert(taro.save())
-    assert File.exist?(taro.path)
-    File.delete(taro.path)
+    assert File.exist?(taro.fullpath)
+    File.delete(taro.fullpath)
   end
   
   def test_delete
     taro = Person.new(TARO)
     taro.save()
-    assert File.exist?(taro.path)
+    assert File.exist?(taro.fullpath)
     taro.delete()
-    assert !File.exist?(taro.path)
+    assert !File.exist?(taro.fullpath)
+  end
+  
+  def save_with_commit
+    taro = Person.new(TARO)
+    
   end
 end
