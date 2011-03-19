@@ -1,0 +1,28 @@
+<html>
+<head>
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0a3/jquery.mobile-1.0a3.min.css" />
+<script src="http://code.jquery.com/jquery-1.5.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.0a3/jquery.mobile-1.0a3.min.js"></script>
+<link rel="stylesheet" href="/css/jquery.ui.datepicker.mobile.css" />
+<script src="/js/jQuery.ui.datepicker.js"></script>
+<script src="/js/jquery.ui.datepicker.mobile.js"></script>
+<script>
+//reset type=date inputs to text
+$( document ).bind( "mobileinit", function(){
+  $.mobile.page.prototype.options.degradeInputs.date = true;
+});
+</script>
+</head>
+<body>
+<div data-role="page">
+  <header data-role="header">
+    <h1>サービスタイトル</h1>
+  </header>
+  <div data-role="content">
+    <%= yield %>
+  </div>
+  <footer data-role="footer">
+    footer
+  </footer>
+</body>
+</html>
